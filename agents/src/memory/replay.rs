@@ -1,13 +1,14 @@
 use crate::memory::transition::Transition;
-use burn::prelude::Backend;
+use gym::environment::Environment;
 use rand::seq::SliceRandom;
 
-pub struct ReplayMemory<B: Backend, const D: usize> {
+#[derive(Debug)]
+pub struct ReplayMemory<E: Environment> {
     capacity: usize,
-    memory: Vec<Transition<B, D>>,
+    memory: Vec<Transition<E>>,
 }
 
-impl<B: Backend, const D: usize> ReplayMemory<B, D> {
+impl<E: Environment> ReplayMemory<E> {
     pub fn new(capacity: usize) -> Self {
         ReplayMemory {
             capacity,
@@ -15,7 +16,7 @@ impl<B: Backend, const D: usize> ReplayMemory<B, D> {
         }
     }
 
-    pub fn push(&mut self, transition: Transition<B, D>) {
+    pub fn push(&mut self, transition: Transition<E>) {
         if self.memory.len() >= self.capacity {
             self.memory.remove(0);
         }
@@ -23,12 +24,17 @@ impl<B: Backend, const D: usize> ReplayMemory<B, D> {
         self.memory.push(transition);
     }
 
-    pub fn sample(&self, batch_size: usize) -> Vec<Transition<B, D>> {
+    pub fn sample(&self, batch_size: usize) -> Option<Vec<Transition<E>>> {
+        if batch_size > self.memory.len() {
+            return None;
+        }
         let mut rng = rand::thread_rng();
 
-        self.memory
-            .choose_multiple(&mut rng, batch_size)
-            .cloned()
-            .collect()
+        Some(
+            self.memory
+                .choose_multiple(&mut rng, batch_size)
+                .cloned()
+                .collect(),
+        )
     }
 }
