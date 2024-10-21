@@ -4,7 +4,8 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-burn = { version = "0.14.0", features = ["train", "wgpu", "vision"] }
-gym-rs = "0.3.0"
-ordered-float = "4.3.0"
+anyhow = "1.0.89"
+burn = { version = "0.14.0", features = ["train", "wgpu", "ndarray", "vision"] }
+derive_builder = "0.20.2"
 rand = "0.8.5"
+gym = { path = "../gym" }
