@@ -1,0 +1,9 @@
+[package]
+name = "gym"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.90"
+burn = { version = "0.14.0", features = ["wgpu", "ndarray"] }
+gym-rs = "0.3.0"
